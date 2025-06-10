@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Type vs Interface</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="node_modules/@shower/ribbon/styles/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .shower {
+            --slide-ratio: calc(16 / 9);
+        }
+
+        .slide:after {
+          left: 920px !important;
+        }
+
+        pre {
+          font-size: 14px !important;
+          padding: 0 16px !important;
+          overflow: hidden !important;
+        }
+
+        code {
+          tab-size: 2 !important;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.css" />
+</head>
+<body class="shower list">
+
+    <header class="caption">
+        <h1>Interface vs Type</h1>
+        <p>by Holovko Ivan</p>
+    </header>
+
+    <section class="slide">
+        <img
+            class="cover"
+            src="pictures/typeVsInterface.png"
+            alt="Illustration of Scorpion labeled 'Interface' and Sub-Zero labeled 'Type' from Mortal Kombat standing side-by-side for a humorous TypeScript comparison"
+        />
+    </section>
+
+    <section class="slide">
+        <h2>Угадайте це тип чи інтерфейс?</h2>
+        <pre><code class="language-ts">const Component = (props: { id: number; name: string }) => {...}</code></pre>
+
+        <blockquote class="next pt-8">Це object type literal (обʼєктний тип-літерал) — тобто тип, записаний у вигляді { id: number; name: string } без окремого імені. Він анонімний, бо не має оголошення через type або interface.
+            <img
+                src="pictures/shadow.png"
+                class="absolute right-4 bottom-0 w-[400px]"
+                alt="Shadow relaxing on a beach chair, illustrating a laid-back approach to inline type definitions"
+            />
+        </blockquote>
+    </section>
+
+    <section class="slide relative">
+        <h2>А ось тут: <u>typeof a</u> - це тип чи інтерфейс?</h2>
+        <pre><code class="language-ts">const a = { b: 5 };
+
+interface c {
+  d: typeof a;
+}</code></pre>
+
+        <blockquote class="next pt-8">
+            Тут <u>typeof a</u> — тип. Навіть якщо він виглядає як структура інтерфейсу, це просто анонімний обʼєктний тип, виведений із значення a
+            <img
+                class="absolute right-0 bottom-0 w-[150px]"
+                src="pictures/sz-gopnik.png"
+                alt="Sub-Zero in a squatting 'gopnik' pose, showing that typeof still produces a type even if it looks like an interface"
+            />
+        </blockquote>
+    </section>
+
+    <section class="slide flex flex-col items-center">
+        <h2 class="self-start">Розглянемо приклад</h2>
+        <pre class="w-full"><code class="language-ts">type BirdType = { wings: 2 };
+interface BirdInterface { wings: 2 }
+
+const bird1: BirdType = { wings: 2 };
+const bird2: BirdInterface = { wings: 2 };
+
+const bird3: BirdInterface = bird1;</code></pre>
+        <a href="https://www.typescriptlang.org/play/?#code/C4TwDgpgBAQglgJwCYBVzQLxQN5QO5wB2A5gM4BcUATFAL4DcAUEcBAgGYCGAxtPMgElCrDj2i4CJCtTqNG3APaFSwKACNESAIyV+qdFCwSiZSjQbylK9Zqq7NQkV16Gc+E9PNNLy1RuQAzPaCwmzOmDbIWvRQAPSxUICg5FAA8gDSQA" target="_blank" class="next">Спробуємо цей код в TS playground</a>
+        <img
+            class="absolute right-0 -bottom-6 w-[180px]"
+            src="pictures/sz-type.png"
+            alt="Sub-Zero explaining that values of the same shape can be assigned across types and interfaces"
+        />
+        <img
+            class="absolute left-0 bottom-0 w-[180px]"
+            src="pictures/scorpio-interface.png"
+            alt="Scorpion explaining that values of the same shape can be assigned across types and interfaces"
+        />
+    </section>
+
+    <section class="slide">
+        <blockquote>
+            Що це значить: Якщо обʼєкт має усі обов’язкові поля, відповідні очікуваному типу, він вважається сумісним, навіть якщо його тип називається інакше або взагалі не вказаний.
+        </blockquote>
+        <div class="flex flex-col items-center gap-4">
+            <a href="https://www.typescriptlang.org/docs/handbook/type-compatibility.html" target="_blank">Документація TypeScript</a>
+            <img
+                class="w-[200px]"
+                src="pictures/type-compatibility.png"
+                alt="QR Code that shows Type Compatibility in TypeScript"
+            />
+            <img
+                class="absolute bottom-0 right-4 w-[400px]"
+                 src="pictures/strong_sz_and_scorpio.png"
+                 alt="Sub-Zero and Scorpion flexing muscles to represent TypeScript type compatibility"
+            />
+            <img
+                class="absolute left-6 bottom-6 h-[50%] scale-x-[-1]"
+                src="pictures/sz_with_phone.png"
+                alt="Sub-Zero holding a phone, showing a QR code to TypeScript documentation"
+            />
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2>& або extends: чи є різниця?</h2>
+        <pre class="overflow-hidden!"><code class="language-ts">type Owl = { nocturnal: true } & BirdType;
+type Robin = { nocturnal: false } & BirdInterface;
+
+interface Chicken extends BirdInterface {
+  colourful: false;
+  flies: false;
+}
+interface Peacock extends BirdType {
+  colourful: true;
+  flies: false;
+}</code></pre>
+        <a href="https://www.typescriptlang.org/play/?#code/C4TwDgpgBAQglgJwCYBVzQLxQN5QO5wB2A5gM4BcUATFAL4DcAUEcBAgGYCGAxtPMgElCrDj2i4CJCtTqNG3APaFSwKACNESAIyV+qdFCwSiZSjQbylK9Zqq7NQkV16Gc+E9PNNLy1RuQAzPaCwmzOmDbIWvRQAPSxUICg5FAA8gDScqCQqXgANq64hArcwACuCIScuZTACKXQtFAAZLCaaJBMWdAASgoahAVQRSXlldVQXLmkDc2tIU5i3ixhYlAAChA8xQDWUBAAHqyESKRz+tnYjFBQirkK5eyl47X1TNfsuXAQ0pPTTLTMUKiFwAYQAFnBuNsIAMDkcTmdHCsXJdrrd7hwnpRfhA3hNPt9sVU-oxaEA" target="_blank" class="next">Спробуємо цей код в TS playground</a>
+        <img
+            class="absolute right-[300px] -bottom-8 w-[180px]"
+            src="pictures/scorpioWithRobin.png"
+            alt="Scorpion with Robin, showing that both & and extends can create new types based on existing ones"
+        />
+        <img
+            class="absolute right-0 -bottom-8 w-[180px]"
+            src="pictures/subZeroWithOwl.png"
+            alt="Sub-Zero with Owl, showing that both & and extends can create new types based on existing ones"
+        />
+    </section>
+
+    <section class="slide" id="conclusion">
+        <blockquote>
+            Що це значить:
+            В TypeScript є два способи Наслідування: через типи з допомогою & та інтерфейси з допомогою extends.
+            І нічого нам не заважає їх міксувати.
+        </blockquote>
+        <img
+            src="pictures/extends_or_&.png"
+            alt="Scorpion and Sub-Zero holding a sign showing '&' and 'extends' symbolizing mixable inheritance approaches"
+        />
+    </section>
+
+    <section class="slide flex items-center justify-center">
+        <img
+            src="pictures/difference.png"
+            alt="Scorpion and Sub-Zero comparing a TypeScript type and interface visually in a brick wall metaphor"
+        />
+    </section>
+
+    <section class="slide">
+        <img
+            class="cover"
+            src="pictures/interface.png"
+            alt="Scorpion smashing a chain labeled 'INTERFACE'"
+        />
+    </section>
+
+    <section class="slide">
+        <h2>Declaration merging</h2>
+        <pre class="overflow-hidden!"><code class="language-ts">interface Animal { name: string }
+interface Animal { age: number }
+
+const a: Animal = { name: 'Dog', age: 3 }; // ✅
+
+type Plant = { species: string }
+// type Plant = { height: number } // ❌ Error</code></pre>
+        <img
+            src="pictures/scorpio-laboratory.png"
+            class="absolute right-0 bottom-0 h-1/2"
+            alt="Scorpion in a lab coat performing chemistry, illustrating interface declaration merging"
+        />
+    </section>
+
+    <section class="slide">
+        <h2>Implement</h2>
+        <blockquote>implements — це типова перевірка відповідності класу заданому інтерфейсу чи типу.
+            Це не створює тип, а перевіряє, що клас реалізує всі обов’язкові поля/методи з інтерфейсу або типу.</blockquote>
+        <pre class="overflow-hidden!"><code class="language-ts">interface B { x: number; y: number };
+
+class Vector implements B {
+  x = 5;
+  y = 8;
+}</code></pre>
+        <img
+            class="absolute right-0 bottom-0 h-[50%]"
+            src="pictures/scorpio-gopnik.png"
+            alt="Scorpion in gopnik pose showing how 'implements' checks class structure against a type or interface"
+        />
+    </section>
+
+    <section class="slide">
+        <h2>Type можно implements</h2>
+        <pre class="overflow-hidden!"><code class="language-ts">type B = { x: number; y: number };
+
+class Vector implements B {
+  x = 5;
+  y = 8;
+}</code></pre>
+        <img
+            src="pictures/scorpio-vector.png"
+            class="absolute right-0 bottom-0 h-1/2"
+            alt="Scorpion holding a 2D vector, showing that a type can be implemented in a class"
+        />
+    </section>
+
+    <section class="slide">
+        <h2>Implements не працює з union</h2>
+        <pre><code class="language-ts">type C = { x: number } | { y: number };
+
+// ❌ ERROR: A class can only implement an object type
+// or intersection of object types with statically known members.
+class Fail implements C {
+  x = 1;
+  y = 2;
+}
+</code></pre>
+        <h4>Клас не може реалізувати union — бо незрозуміло, яку саме гілку треба реалізувати.</h4>
+    </section>
+
+    <section class="slide">
+        <img
+            class="cover"
+            src="pictures/type.png"
+            alt="Sub-Zero showing a victory pose under a 'Type' banner, symbolizing TypeScript type flexibility"
+        />
+    </section>
+
+    <section class="slide">
+        <h4>Union:</h4>
+        <pre class="overflow-hidden!"><code class="language-ts">type Status = 'active' | 'inactive'; // ✅
+interface Status = 'active' | 'inactive'; // ❌ Синтаксична помилка</code></pre>
+        <div class="next">
+            <h4>Tuple types:</h4>
+            <pre class="overflow-hidden!"><code class="language-ts">type Point = [number, number]; // ✅
+interface Point = [number, number]; // ❌ Синтаксична помилка</code></pre>
+        </div>
+        <div class="next">
+            <h4>Mapped types:</h4>
+            <pre class="overflow-hidden!"><code class="language-ts">type Flags = { [key in Status]: boolean; }; // ✅
+interface Flags { [key in Status]: boolean; } // ❌ Syntax error</code></pre>
+        </div>
+        <img
+            class="absolute right-0 bottom-0 h-[50%]"
+            src="pictures/sz-juggler.png"
+            alt="Sub-Zero juggling bubbles representing union, tuple, and mapped types that only work with 'type'"
+        />
+    </section>
+
+    <section class="slide">
+        <h4>Conditional types:</h4>
+        <pre class="overflow-hidden!"><code class="language-ts">// ✅ працює з type
+type IsString&lt;T&gt; = T extends string ? "yes" : "no";
+
+type A = IsString&lt;string&gt;;  // "yes"
+type B = IsString&lt;number&gt;;  // "no"
+
+// ❌ Помилка: Type alias required
+interface IsString&lt;T&gt; = T extends string ? "yes" : "no";</code></pre>
+        <img
+            class="absolute right-0 bottom-0 h-[50%]"
+            src="pictures/sz-condition.png"
+            alt="Sub-Zero holding balance scales with 'true' and 'false', illustrating conditional types"
+        />
+    </section>
+
+    <section class="slide">
+        <h2>Infer</h2>
+        <pre class="overflow-hidden!"><code class="language-ts">type GetArrayItemType&lt;T&gt; = T extends (infer U)[] ? U : T;
+
+type X = GetArrayItemType&lt;string[]&gt;; // string
+type Y = GetArrayItemType&lt;number&gt;;   // number</code></pre>
+        <blockquote class="pt-8">Це ключове слово, яке дозволяє "витягти" тип із іншого типу всередині extends.</blockquote>
+        <img
+            class="absolute right-0 bottom-0 h-[50%]"
+            src="pictures/sz_microscope.png"
+            alt="Sub-Zero inspecting something under a microscope, symbolizing the power of 'infer'"
+        />
+    </section>
+
+    <section class="slide">
+        <h2>Infer</h2>
+        <p>Це неймовірно потужна штука, наприклад:</p>
+        <pre class="overflow-hidden!"><code class="language-ts">type InferredType&lt;T&gt; = T extends (...args: any[]) => infer Result ? Result : never;
+
+type F = () => boolean;
+type R = InferredType&lt;F&gt;; // boolean
+
+// ❌ Error
+interface InferredType&lt;T&gt; = T extends (...args: any[]) => infer R ? R : never;</code></pre>
+        <img
+            class="absolute right-0 bottom-0 h-1/3"
+            src="pictures/sz-laboratory.png"
+            alt="Sub-Zero mixing liquids in a lab, metaphor for inferring types from function return types"
+        />
+    </section>
+
+    <section class="slide flex flex-col items-center">
+        <h2>Докладніше про Infer можна почитати тут:</h2>
+        <img
+            class="w-[300px]"
+            src="pictures/infer.png"
+            alt="QR Code that links to a blog post about understanding 'infer' in TypeScript"
+        />
+        <a href="https://blog.logrocket.com/understanding-infer-typescript/" target="_blank">https://blog.logrocket.com/understanding-infer-typescript/</a>
+        <img
+            class="absolute right-0 bottom-0 h-[50%]"
+            src="pictures/sz_with_phone.png"
+            alt="Sub-Zero holding a phone, showing a QR code to a blog post about infer in TypeScript"
+        />
+    </section>
+
+    <section class="slide">
+        <h2>Типи й інтерфейси: хто кого?</h2>
+        <table class="table-auto w-full! m-0! border border-gray-300 text-sm text-left">
+            <thead class="bg-gray-100">
+            <tr>
+                <th class="border px-4 py-2">Можливість</th>
+                <th class="border px-4 py-2 text-center">interface</th>
+                <th class="border px-4 py-2 text-center">type</th>
+                <th class="border px-4 py-2">Коментар</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="border px-4 py-2">Об'єднання</td>
+                <td class="border px-4 py-2 text-center">extends</td>
+                <td class="border px-4 py-2 text-center">&</td>
+                <td class="border px-4 py-2">І type, і interface підтримують комбінації, але з різним синтаксисом</td>
+            </tr>
+            <tr>
+                <td class="border px-4 py-2">Function signatures</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2">І interface, і type можуть описувати функції</td>
+            </tr>
+            <tr>
+                <td class="border px-4 py-2">implements у класі</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2">Type можна implements, якщо це чистий об'єкт — без union</td>
+            </tr>
+            <tr>
+                <td class="border px-4 py-2">Generics</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2">Generics — працюють і там, і там</td>
+            </tr>
+            <tr>
+                <td class="border px-4 py-2">Union</td>
+                <td class="border px-4 py-2 text-center">❌</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2">type A = B | C — не підтримується через interface</td>
+            </tr>
+            <tr>
+                <td class="border px-4 py-2">Tuple</td>
+                <td class="border px-4 py-2 text-center">❌</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2">type Point = [number, number] — не можна описати через interface</td>
+            </tr>
+            <tr>
+                <td class="border px-4 py-2">Примітиви</td>
+                <td class="border px-4 py-2 text-center">❌</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2">type ID = string | number</td>
+            </tr>
+            <tr>
+                <td class="border px-4 py-2">Mapped types</td>
+                <td class="border px-4 py-2 text-center">❌</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2">type Flags = { [K in Keys]: boolean }</td>
+            </tr>
+            <tr>
+                <td class="border px-4 py-2">Conditional types</td>
+                <td class="border px-4 py-2 text-center">❌</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2">type A&lt;T&gt; = T extends string ? ...</td>
+            </tr>
+            <tr>
+                <td class="border px-4 py-2">Infer</td>
+                <td class="border px-4 py-2 text-center">❌</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2">Працює лише всередині type з умовними типами</td>
+            </tr>
+            <tr>
+                <td class="border px-4 py-2">Declaration merging</td>
+                <td class="border px-4 py-2 text-center">✅</td>
+                <td class="border px-4 py-2 text-center">❌</td>
+                <td class="border px-4 py-2">Можна оголошувати кілька разів один й той самий interface, type — ні</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="slide">
+        <h2>Історичний контекст — Type vs Interface</h2>
+        <p>🕰️ Колись (до ~2020) TypeScript-спільнота (і навіть офіційна документація) рекомендувала interface за замовчуванням.<br />
+            Аргументи:</p>
+        <ul>
+            <li>Interface краще для OOП та класифікаційних структур</li>
+            <li>Підтримує declaration merging</li>
+            <li>Семантично більш «контрактний» стиль</li>
+        </ul>
+        <img
+            class="absolute right-0 bottom-0 h-1/2"
+            src="pictures/sz-professor.png"
+            alt="Sub-Zero dressed as a professor explaining the historical preference for interface in TypeScript"
+        />
+    </section>
+
+    <section class="slide">
+        <h2>🔄 Що змінилося (2020+)</h2>
+        <p>З часом type став набагато потужнішим:</p>
+        <ul>
+            <li>підтримка infer, conditional, mapped, tuple, union, alias для primitive</li>
+            <li>легша композиція (&, |, extends об'єктів)</li>
+            <li>більша гнучкість у складних типах</li>
+        </ul>
+        <img
+            class="absolute right-0 bottom-0 h-1/2"
+            src="pictures/scorpioReadDocs.png"
+            alt="Scorpion reading documentation, representing the shift toward using 'type' in modern TypeScript"
+        />
+    </section>
+
+    <section class="slide flex flex-col items-center">
+        <h2>Навіть офіційна документація більше не наполягає на interface:</h2>
+        <img
+            class="w-[200px]"
+            src="pictures/qr_ts.png"
+            alt="QR Code that links to TypeScript Everyday Types documentation"
+        />
+        <a href="https://www.typescriptlang.org/docs/handbook/2/everyday-types.html" target="_blank">https://www.typescriptlang.org/docs/handbook/2/everyday-types.html</a>
+    </section>
+
+    <section class="slide">
+        <h2>✅ Сучасна практика</h2>
+        <ul>
+            <li>Використовувати type для складних типів, умовних, infer, union, tuple</li>
+            <li>Використовувати interface для класів, декларативних структур, API-контрактів</li>
+            <li>Не змішувати їх без потреби — це може ускладнити читабельність коду</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <figure>
+            <img
+                class="cover"
+                src="pictures/typeScriptNotInterfaceScript.png"
+                alt="A humorous image of a TypeScript logo with 'Not InterfaceScript' text, symbolizing the modern shift away from using interfaces as the default type definition"
+            />
+        </figure>
+    </section>
+
+    <section class="slide flex flex-col items-center">
+        <h2>Що є корисного?</h2>
+        <a href="https://www.typescriptlang.org/docs/handbook/">Документація Type-Script</a>
+        <a href="https://www.typescriptlang.org/play">TypeScript Playground</a>
+        <a href="https://www.typescriptlang.org/cheatsheets/">Шпаргалки</a>
+    </section>
+
+    <section class="slide">
+        <img src="pictures/questions.png" alt="Sub-Zero and Scorpio waiting for questions" />
+    </section>
+
+    <footer class="badge">
+        <a href="https://github.com/shower/shower">Fork me on GitHub</a>
+    </footer>
+
+    <div class="progress"></div>
+
+    <script src="node_modules/@shower/core/dist/shower.js"></script>
+    <!-- Copyright © 2025 Yours Truly, Famous Inc. -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1/prism.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-typescript.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const codeElements = document.querySelectorAll('code');
+        codeElements.forEach(code => {
+            code.addEventListener('click', () => {
+              console.log(code.innerText);
+            })
+        });
+      });
+    </script>
+</body>
+</html>
